@@ -73,7 +73,20 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 .page-title-bar { margin-bottom: 18px; }
 .page-title-bar .pt-h { font-size: 20px; font-weight: 800; color: var(--ink); margin: 0 0 4px; }
 .page-title-bar .pt-sub { font-size: 13px; color: var(--ink-soft); margin: 0; }
-.src-tag { display: inline-block; font-size: 11px; font-weight: 600; color: var(--brand-dark); background: var(--brand-bg); padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
+.src-tag { display: inline-block; font-size: 11px; font-weight: 600; color: var(--brand-dark); background: var(--brand-bg); padding: 2px 8px; border-radius: 5px; white-space: normal; line-height: 1.35; }
+.vp-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 5px; }
+.vp-tag.gas { color: var(--fail-red); background: var(--fail-bg); }
+.vp-tag.attp { color: var(--warn-orange); background: var(--warn-bg); }
+.crit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--ink); margin-top: 5px; line-height: 1.35; }
+.crit-item .vp-tag { flex-shrink: 0; }
+.crit-alert { cursor: pointer; }
+.crit-alert .crit-chev { display: inline-block; font-weight: 800; color: var(--fail-red); margin-right: 5px; transition: transform 0.18s; }
+.crit-alert.open .crit-chev { transform: rotate(90deg); }
+.crit-alert .crit-detail { display: none; }
+.crit-alert.open .crit-detail { display: block; }
+.na-reasons { font-size: 12px; color: var(--ink-soft); background: var(--brand-bg); padding: 8px 11px; border-radius: 8px; margin-bottom: 10px; line-height: 1.5; }
+.lb-flag { font-size: 9.5px; font-weight: 800; color: #fff; background: var(--fail-red); padding: 1px 5px; border-radius: 4px; vertical-align: middle; }
+.sev-badge { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 4px; margin-left: 6px; white-space: nowrap; }
 .fix-section { margin-bottom: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 .fix-section .fix-sec-head { display: flex; align-items: center; gap: 9px; background: var(--brand-warm); padding: 8px 12px; font-size: 13px; color: var(--ink); }
 .fix-section .fix-sec-head .fix-sec-rome { background: var(--brand-dark); color: #fff; font-weight: 800; font-size: 11px; width: 24px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 5px; flex-shrink: 0; }
@@ -88,7 +101,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 .filter-bar .export-btn:hover { border-color: var(--brand-dark); background: var(--brand-bg); }
 
 /* KPI */
-.kpi-strip { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.kpi-strip { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
 .kpi-card { background: var(--brand-panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px; position: relative; overflow: hidden; }
 .kpi-card .k-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .kpi-card .k-label { font-size: 11px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
@@ -157,7 +170,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 
 /* HEATMAP (stores as rows, groups as columns) */
 .heatmap { width: 100%; border-collapse: separate; border-spacing: 0 3px; font-size: 12px; table-layout: fixed; }
-.heatmap thead th { padding: 6px 4px; font-weight: 700; color: var(--ink-soft); text-align: center; font-size: 10px; line-height: 1.25; white-space: normal; vertical-align: bottom; }
+.heatmap thead th { padding: 6px 4px; font-weight: 700; color: var(--ink-soft); text-align: center; font-size: 10px; line-height: 1.25; white-space: normal; vertical-align: bottom; position: sticky; top: 0; z-index: 3; background: var(--brand-panel); }
 .heatmap thead th.row-h { text-align: left; width: 200px; padding-left: 10px; font-size: 11px; }
 .heatmap thead th.avg-h { width: 56px; }
 .heatmap tbody td { padding: 0 3px; text-align: center; }
@@ -209,6 +222,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 .data-table col.c-time { width: 8%; } .data-table col.c-num { width: 7%; } .data-table col.c-rate { width: 12%; }
 .data-table col.c-band { width: 10%; } .data-table col.c-status { width: 9%; } .data-table col.c-hot { width: 14%; }
 .data-table thead tr { background: var(--brand-bg); }
+.data-table thead th { position: sticky; top: 0; z-index: 3; background: var(--brand-bg); }
 .data-table th { padding: 11px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; }
 .data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 .data-table td .cell-name { font-weight: 600; }
@@ -373,30 +387,29 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 
  <div class="kpi-strip">
  <div class="kpi-card hero">
- <div class="k-top"><div class="k-label">TỈ LỆ HOÀN THÀNH TRUNG BÌNH</div></div>
+ <div class="k-top"><div class="k-label">Tỷ lệ checklist đạt</div></div>
  <div class="k-val" id="kpiRate">—</div>
  <div class="k-sub"><span class="k-delta up">+2.4%</span> so với kỳ trước</div>
  <div class="ring-wrap"><canvas id="ringChart"></canvas></div>
  </div>
  <div class="kpi-card blue-accent"><div class="k-top"><div class="k-label">Tổng hạng mục</div></div><div class="k-val" id="kpiTotal">—</div><div class="k-sub" id="kpiTotalSub"></div></div>
- <div class="kpi-card warn-accent"><div class="k-top"><div class="k-label">Cần nhắc nhở</div></div><div class="k-val warn" id="kpiRemind">—</div><div class="k-sub" id="kpiRemindSub">cơ sở</div></div>
- <div class="kpi-card orange-accent"><div class="k-top"><div class="k-label">Khiếu nại KH</div></div><div class="k-val orange" id="kpiComplaint">—</div><div class="k-sub" id="kpiComplaintSub">trong kỳ</div></div>
- <div class="kpi-card green-accent"><div class="k-top"><div class="k-label">Cơ sở tốt nhất</div></div><div class="k-val k-name green" id="kpiBest">—</div><div class="k-sub" id="kpiBestSub"></div></div>
- <div class="kpi-card red-accent"><div class="k-top"><div class="k-label">Cơ sở kém nhất</div></div><div class="k-val k-name red" id="kpiWorst">—</div><div class="k-sub" id="kpiWorstSub"></div></div>
+ <div class="kpi-card orange-accent"><div class="k-top"><div class="k-label">Khiếu nại KH</div></div><div class="k-val orange" id="kpiComplaint">—</div><div class="k-sub" id="kpiComplaintSub"></div></div>
+ <div class="kpi-card green-accent"><div class="k-top"><div class="k-label">Tốt nhất</div></div><div class="k-val k-name green" id="kpiBest">—</div><div class="k-sub" id="kpiBestSub"></div></div>
+ <div class="kpi-card red-accent"><div class="k-top"><div class="k-label">Kém nhất</div></div><div class="k-val k-name red" id="kpiWorst">—</div><div class="k-sub" id="kpiWorstSub"></div></div>
  </div>
 
- <div class="grid-wide">
+ <div class="grid-wide" style="grid-template-columns:1fr 1.7fr">
  <div class="panel">
  <div class="panel-head"><div class="panel-title">Xu hướng tỉ lệ hoàn thành theo ngày</div><div class="panel-sub">% Đạt trung bình toàn hệ thống</div></div>
  <div class="chart-box" style="height:240px;"><canvas id="trendChart"></canvas></div>
  </div>
- <div class="panel">
- <div class="panel-head"><div class="panel-title">Cảnh báo cần xử lý ngay</div><div class="panel-sub">Nộp muộn & chưa báo cáo</div></div>
- <div id="alertPanel" style="max-height:240px;overflow-y:auto;"></div>
+ <div class="panel" style="border-left:4px solid var(--fail-red)">
+ <div class="panel-head"><div class="panel-title">Cảnh báo cần xử lý ngay</div><div class="panel-sub" id="alertSummary">Vi phạm nghiêm trọng · nộp muộn · chưa báo cáo</div></div>
+ <div id="alertPanel" style="max-height:300px;overflow-y:auto;"></div>
  </div>
  </div>
 
- <div class="grid-wide">
+ <div class="grid-wide" style="grid-template-columns:1.4fr 1fr">
  <div class="panel">
  <div class="panel-head">
  <div class="panel-title">Bản đồ tương quan: Điểm checklist & Doanh thu theo vị trí</div>
@@ -498,7 +511,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
  <!-- Cụm điểm theo nhóm (per-store) + Điểm nóng -->
  <div class="p2-grid">
  <div class="panel">
- <div class="panel-head"><div class="panel-title">Cụm điểm theo nhóm hạng mục</div><div class="panel-sub">Bấm một nhóm để xem điểm nóng bên phải · sắp theo báo động</div></div>
+ <div class="panel-head"><div class="panel-title">Cụm điểm theo nhóm hạng mục</div><div class="panel-sub">Bấm nhóm để lọc điểm nóng</div></div>
  <div class="chart-box" style="height:300px;"><canvas id="sGroupBar"></canvas></div>
  </div>
  <div class="panel">
@@ -574,11 +587,11 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 
  <div class="grid-wide" style="grid-template-columns:1fr 1.9fr">
  <div class="panel">
- <div class="panel-head"><div class="panel-title">Số vụ phát sinh theo ngày</div><div class="panel-sub">Sự cố & khiếu nại mỗi ngày trong kỳ</div></div>
+ <div class="panel-head"><div class="panel-title">Số vụ phát sinh theo ngày</div><div class="panel-sub">Sự cố & khiếu nại theo ngày</div></div>
  <div class="chart-box" style="height:280px;"><canvas id="incTimeChart"></canvas></div>
  </div>
  <div class="panel">
- <div class="panel-head"><div class="panel-title">Cơ sở phát sinh nhiều nhất</div><div class="panel-sub">Chia màu theo mức độ nghiêm trọng · xếp theo tổng số vụ</div></div>
+ <div class="panel-head"><div class="panel-title">Cơ sở phát sinh nhiều nhất</div><div class="panel-sub">Theo mức độ nghiêm trọng</div></div>
  <div class="chart-box" style="height:280px;"><canvas id="incStoreChart"></canvas></div>
  </div>
  </div>
@@ -692,7 +705,7 @@ var HOT_ITEMS = [
 
 // ===== Khiếu nại khách hàng — dữ liệu theo dõi xử lý =====
 var COMPLAINT_TXT = ['Bia/nước ngọt phục vụ không đủ lạnh','Đồ nhậu ra quá chậm giờ cao điểm (>30 phút)','Phát hiện dị vật (tóc) trong món','Hải sản/đồ nướng không tươi, có mùi lạ','Tính tiền sai / nhầm món trong hóa đơn','Phần ăn ít hơn so với hình ảnh menu','Thái độ phục vụ chưa nhiệt tình','Bàn ăn, chén đũa chưa được vệ sinh sạch','Quán ồn, ám khói nướng sang bàn bên','Phục vụ nhầm món / thiếu món trong order'];
-var CSOURCE = ['Trực tiếp tại quán','Google Maps','Hotline CSKH','Fanpage / Facebook','App giao đồ ăn (Grab/Shopee)'];
+var CSOURCE = ['Trực tiếp tại quán','Google Maps','Hotline CSKH','Fanpage / Facebook','App giao đồ ăn'];
 var HANDLERS = ['QL vùng - A. Phú','Quản lý cơ sở','CSKH - C. Trang','QL vùng - C. Linh','Giám sát - A. Hoàng'];
 var CRESULT_DONE = ['Đã xin lỗi & giảm trừ hóa đơn, nhắc nhở phục vụ','Đào tạo lại nhân viên, bổ sung bước kiểm tra trước khi bưng','Đổi món/bia mới + tặng voucher, khách hài lòng','Rà soát & đổi nhà cung cấp nguyên liệu','Phạt KPI ca trực, cập nhật quy trình phục vụ'];
 var CSEV = [{t:'Cao',c:'#CB3B3B'},{t:'Trung bình',c:'#C17A0B'},{t:'Thấp',c:'#2563A8'}];
@@ -716,6 +729,30 @@ function storeGroupRates(s){
 }
 
 // per-item pass on a given day, weighted by group rate
+// Phân loại mức độ nghiêm trọng của hạng mục + nhóm vi phạm (CCP/ATTP vs PCCC/khí gas)
+function classifyItem(groupName, text){
+ var t=(groupName+' '+text).toLowerCase();
+ if(/gas|khí|chữa cháy| pccc|van /.test(t)) return {sev:'critical', type:'gas'};
+ if(/ccp|an toàn thực phẩm|nhiệt độ|tủ đông|tủ lạnh|tủ mát|lưu mẫu|chéo nhiễm|chín và sống|tem nhãn|nhãn kiểm soát|hsd|hết hạn|hỏng|ôi thiu/.test(t)) return {sev:'critical', type:'attp'};
+ if(/nguyên liệu|kho|vệ sinh|thiết bị|nhân sự|phân công/.test(t)) return {sev:'major', type:null};
+ return {sev:'minor', type:null};
+}
+var SEV_META={critical:{t:'Nghiêm trọng',c:'#CB3B3B',bg:'#FAEAEA'},major:{t:'Quan trọng',c:'#C17A0B',bg:'#FBF1DF'},minor:{t:'Thông thường',c:'#5F7068',bg:'#EEF1EE'}};
+var NA_REASON=['Thiết bị/khu vực không sử dụng trong ca','Hạng mục không áp dụng cho cơ sở này','Thiết bị đang bảo trì / ngừng hoạt động','Chưa tới lịch áp dụng hạng mục','Mặt hàng không kinh doanh tại cơ sở'];
+function naReasonFor(storeId,gi,ii){ return NA_REASON[hash(storeId+'nar'+gi+ii)%NA_REASON.length]; }
+
+// Trạng thái 1 hạng mục: 'pass' | 'fail' | 'na' (N/A không áp dụng cho hạng mục nghiêm trọng)
+function itemState(storeId, off, ca, gi, ii, groupRate, isCritical){
+ if(isCritical){
+ // Hạng mục nghiêm trọng: tuân thủ rất cao, chỉ hiếm khi vi phạm (mới kích hoạt hard-stop)
+ var critRoll = hash(storeId+'crit'+ca+gi+ii+off) % 1000;
+ return critRoll < 14 ? 'fail' : 'pass'; // ~1.4% vi phạm
+ }
+ var naRoll = hash(storeId+'na'+ca+gi+ii+off) % 100;
+ if(naRoll < 5) return 'na';
+ return itemPass(storeId,off,ca,gi,ii,groupRate) ? 'pass' : 'fail';
+}
+
 function itemPass(storeId, dayOffset, ca, gi, ii, groupRate){
  var roll = hash(storeId+'|'+ca+'|'+gi+'|'+ii+'|'+dayOffset) % 100;
  return roll < groupRate;
@@ -735,24 +772,45 @@ function storeGroupRatesCa(s, ca){
 function computeStore(s, days, ca){
  var grBase = storeGroupRates(s);
  if(s.base===0){
- return { ...s, pass:0, fail:0, total:0, rate:0, status:'missing', time:'—', topHot:'—', groupRates:grBase, rev:0, staff:8+(hash(s.id+'staff')%13) };
+ return { ...s, pass:0, fail:0, na:0, total:0, rate:0, naRate:0, critFails:0, critGas:0, critAttp:0, critItems:[], hardStop:false, status:'missing', time:'—', topHot:'—', groupRates:grBase, rev:0, staff:8+(hash(s.id+'staff')%13) };
  }
  var gr = (ca && ca!=='all') ? storeGroupRatesCa(s, ca) : grBase;
  var avg = Math.round(gr.reduce(function(a,b){return a+b;},0)/gr.length);
  var baseAvg = Math.round(grBase.reduce(function(a,b){return a+b;},0)/grBase.length);
- var passPerDay = Math.round(TOTAL_ITEMS*avg/100);
- var pass = passPerDay*days, fail=(TOTAL_ITEMS-passPerDay)*days, total=TOTAL_ITEMS*days;
+ var caItem = (ca==='ket') ? 'ket' : 'dau';
+ var GG = groupsForCa(caItem), CC = critForCa(caItem);
+ // duyệt từng hạng mục để đếm Đạt / Chưa đạt / N/A và phát hiện vi phạm nghiêm trọng
+ var pass=0, fail=0, na=0, critGas=0, critAttp=0, critFails=0, critItems=[];
+ for(var dd=0; dd<days; dd++){
+ GG.forEach(function(g,gi){
+ (CC[g]||[]).forEach(function(txt,ii){
+ var cls=classifyItem(g,txt);
+ var st=itemState(s.id,dd,caItem,gi,ii,gr[gi], cls.sev==='critical');
+ if(st==='na'){ na++; }
+ else if(st==='pass'){ pass++; }
+ else { fail++;
+ if(cls.sev==='critical' && dd===0){ critFails++; if(cls.type==='gas')critGas++; else critAttp++; critItems.push({txt:txt,type:cls.type,cat:g}); }
+ }
+ });
+ });
+ }
+ var total = pass+fail+na;
+ var rate = (pass+fail)>0 ? Math.round(pass/(pass+fail)*100) : 0; // = Đạt / (Tổng − N/A)
+ var naRate = total>0 ? Math.round(na/total*100) : 0;
+ var hardStop = critFails>0;
  var status = avg>=90 ? 'done' : (s.id==='CG2'||s.id==='CG3'||s.id==='DD2'||s.id==='HM1') ? 'late' : 'done';
  var r=_rndFor(hash(s.id+'t'));
  var time = status==='late' ? '11:'+(30+Math.floor(r()*25)) : (9+Math.floor(r()*2))+':'+String(10+Math.floor(r()*40)).padStart(2,'0');
  var worstIdx = gr.indexOf(Math.min.apply(null,gr));
- var th = {txt: GROUPS[worstIdx]};
- // Demo revenue (triệu VND/tháng) — theo điểm baseline (không đổi theo ca)
  var rr=_rndFor(hash(s.id+'rev'));
  var rev = Math.round(120 + baseAvg*2.9 + (rr()*70-35));
- if(s.id==='OP1') rev += 120; // Ocean Park is a large flagship venue
- return { ...s, pass:pass, fail:fail, total:total, rate:avg, status:status, time:time, topHot: th?th.txt:'Vệ sinh thiết bị', groupRates:gr, rev:rev, staff:8+(hash(s.id+'staff')%13) };
+ if(s.id==='OP1') rev += 120;
+ return { ...s, pass:pass, fail:fail, na:na, total:total, rate:rate, naRate:naRate, critFails:critFails, critGas:critGas, critAttp:critAttp, critItems:critItems, hardStop:hardStop, status:status, time:time, topHot: GROUPS[worstIdx], groupRates:gr, rev:rev, staff:8+(hash(s.id+'staff')%13) };
 }
+
+// Xếp loại có tính tới hard-stop: 1 vi phạm nghiêm trọng -> đỏ bất kể điểm
+function effColor(r){ return r.hardStop ? '#CB3B3B' : bandColor(r.rate); }
+function effLabel(r){ return r.hardStop ? 'Báo động đỏ' : bandLabel(r.rate); }
 
 function getData(caOverride){
  var period=document.getElementById('fPeriod').value;
@@ -976,21 +1034,26 @@ function renderCEO(){
  var missing=d.rows.filter(function(r){return r.status==='missing';});
  var totPass=d.rows.reduce(function(a,r){return a+r.pass;},0);
  var totFail=d.rows.reduce(function(a,r){return a+r.fail;},0);
- var totItems=totPass+totFail;
+ var totNa=d.rows.reduce(function(a,r){return a+r.na;},0);
+ var totItems=totPass+totFail;           // mẫu số tính tỷ lệ (đã trừ N/A)
+ var totFull=totPass+totFail+totNa;       // tổng hạng mục thực tế
  var avgRate=totItems>0?Math.round(totPass/totItems*100):0;
  var lateCount=d.rows.filter(function(r){return r.status==='late';}).length;
  var missCount=missing.length;
 
- var passPct = totItems>0?Math.round(totPass/totItems*100):0;
  document.getElementById('kpiRate').textContent=avgRate+'%';
- document.getElementById('kpiTotal').textContent=totItems.toLocaleString('vi-VN');
- document.getElementById('kpiTotalSub').innerHTML='<span style="color:var(--pass-green);font-weight:700">'+totPass.toLocaleString('vi-VN')+' đạt</span> · <span style="color:var(--fail-red);font-weight:700">'+totFail.toLocaleString('vi-VN')+' chưa đạt</span>';
- document.getElementById('kpiRemind').textContent=(lateCount+missCount);
- document.getElementById('kpiRemindSub').textContent=lateCount+' nộp muộn · '+missCount+' chưa báo cáo';
+ document.getElementById('kpiTotal').textContent=totFull.toLocaleString('vi-VN');
+ document.getElementById('kpiTotalSub').innerHTML='<span style="color:var(--pass-green);font-weight:700">'+totPass.toLocaleString('vi-VN')+' đạt</span> · <span style="color:var(--fail-red);font-weight:700">'+totFail.toLocaleString('vi-VN')+' chưa đạt</span> · <span style="color:var(--ink-soft);font-weight:700">'+totNa.toLocaleString('vi-VN')+' N/A</span>';
  // complaints count (toàn hệ thống, kỳ này)
  var trk=buildTracking(d.rows, d.days);
  document.getElementById('kpiComplaint').textContent=trk.complaints.length;
- document.getElementById('kpiComplaintSub').textContent=_cnt(trk.complaints,'todo')+' chưa xử lý · '+_cnt(trk.complaints,'doing')+' đang xử lý';
+ var cmpNow=trk.complaints.length;
+ var cmpPrev=Math.max(0, cmpNow + ((hash('cmpprev'+d.days)%9)-4)); // kỳ trước (demo)
+ var cmpDelta=cmpNow-cmpPrev;
+ var cmpStr = cmpDelta>0 ? ('<span style="color:var(--fail-red);font-weight:700">+'+cmpDelta+'</span> so với kỳ trước')
+   : cmpDelta<0 ? ('<span style="color:var(--pass-green);font-weight:700">'+cmpDelta+'</span> so với kỳ trước')
+   : 'không đổi so với kỳ trước';
+ document.getElementById('kpiComplaintSub').innerHTML=cmpStr;
  // best / worst cơ sở (chỉ tính cơ sở đã báo cáo)
  var ranked=rows.slice().sort(function(a,b){return b.rate-a.rate;});
  if(ranked.length){
@@ -1000,6 +1063,12 @@ function renderCEO(){
    document.getElementById('kpiWorst').textContent=worst.name.split('–')[0].trim();
    document.getElementById('kpiWorstSub').innerHTML='<b style="color:var(--fail-red)">'+worst.rate+'%</b> · '+worst.regionName;
  }
+
+ // ===== Vi phạm nghiêm trọng (hard-stop) — dữ liệu cho cảnh báo gộp =====
+ var critStores=d.rows.filter(function(r){return r.hardStop;}).sort(function(a,b){return b.critFails-a.critFails;});
+ var totCrit=d.rows.reduce(function(a,r){return a+r.critFails;},0);
+ var totGas=d.rows.reduce(function(a,r){return a+r.critGas;},0);
+ var totAttp=d.rows.reduce(function(a,r){return a+r.critAttp;},0);
 
  destroyChart('ring');
  charts.ring=new Chart(document.getElementById('ringChart'),{type:'doughnut',data:{datasets:[{data:[avgRate,100-avgRate],backgroundColor:['#C8862B','rgba(255,255,255,0.14)'],borderWidth:0}]},options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
@@ -1024,17 +1093,28 @@ function renderCEO(){
  }
  });
 
- // ----- ALERT PANEL (late + missing) -----
+ // ----- CẢNH BÁO GỘP: vi phạm nghiêm trọng + nộp muộn + chưa báo cáo -----
  var lateStores=d.rows.filter(function(r){return r.status==='late';});
  var missStores=d.rows.filter(function(r){return r.status==='missing';});
  var todayStr=new Date().toLocaleDateString('vi-VN',{day:'numeric',month:'numeric'});
+ document.getElementById('alertSummary').innerHTML='<span style="color:var(--fail-red);font-weight:700">'+totCrit+' vi phạm nghiêm trọng</span> · '+lateStores.length+' nộp muộn · '+missStores.length+' chưa báo cáo';
  var alHtml='';
- if(lateStores.length===0 && missStores.length===0){
- alHtml='<div class="alert-empty"><div class="ae-ico"></div><p>Tất cả cơ sở đã nộp báo cáo đúng hạn!</p></div>';
+ if(critStores.length===0 && lateStores.length===0 && missStores.length===0){
+ alHtml='<div class="alert-empty"><div class="ae-ico"></div><p>Không có cảnh báo. Toàn hệ thống an toàn & đúng hạn!</p></div>';
  } else {
- missStores.forEach(function(r){
- alHtml+='<div class="alert-item miss"><div class="alert-body"><div class="alert-name">'+r.name.split('–')[0].trim()+'</div><div class="alert-meta">Chưa nộp · hôm nay '+todayStr+'</div></div><div class="alert-right"><span class="alert-tag tag-missing">Chưa báo cáo</span><a href="'+serviceUrl(r.id,0,'dau')+'" target="_blank" class="alert-link">Mở phiếu</a></div></div>';
+ // 1) Vi phạm nghiêm trọng (hard-stop) — dropdown: bấm để xem hạng mục vi phạm
+ critStores.forEach(function(r){
+ var itemsHtml=r.critItems.map(function(ci){
+ var tcls=ci.type==='gas'?'gas':'attp', tlabel=ci.type==='gas'?'PCCC/khí gas':'CCP/ATTP';
+ return '<div class="crit-item"><span class="vp-tag '+tcls+'">'+tlabel+'</span><span>'+ci.txt+'</span></div>';
+ }).join('');
+ alHtml+='<div class="alert-item late crit-alert" style="border-left-color:var(--fail-red)" onclick="this.classList.toggle(\'open\')"><div class="alert-body"><div class="alert-name"><span class="crit-chev">›</span>'+r.name.split('–')[0].trim()+' <span style="color:var(--fail-red);font-size:11px">· chuyển ĐỎ bất kể điểm ('+r.rate+'%)</span></div><div class="crit-detail">'+itemsHtml+'</div></div><div class="alert-right"><span class="alert-tag tag-missing">Hard-stop</span><a href="'+serviceUrl(r.id,0,'dau')+'" target="_blank" class="alert-link" onclick="event.stopPropagation()">Xem phiếu</a></div></div>';
  });
+ // 2) Chưa báo cáo
+ missStores.forEach(function(r){
+ alHtml+='<div class="alert-item miss"><div class="alert-body"><div class="alert-name">'+r.name.split('–')[0].trim()+'</div><div class="alert-meta">Chưa nộp · '+todayStr+'</div></div><div class="alert-right"><span class="alert-tag tag-missing">Chưa báo cáo</span><a href="'+serviceUrl(r.id,0,'dau')+'" target="_blank" class="alert-link">Mở phiếu</a></div></div>';
+ });
+ // 3) Nộp muộn
  lateStores.forEach(function(r){
  alHtml+='<div class="alert-item late"><div class="alert-body"><div class="alert-name">'+r.name.split('–')[0].trim()+'</div><div class="alert-meta">Đầu ca nộp '+r.time+' · '+todayStr+'</div></div><div class="alert-right"><span class="alert-tag tag-late">Đầu ca muộn</span><a href="'+serviceUrl(r.id,0,'dau')+'" target="_blank" class="alert-link">Xem phiếu</a></div></div>';
  });
@@ -1042,7 +1122,7 @@ function renderCEO(){
  document.getElementById('alertPanel').innerHTML=alHtml;
 
  // ----- CORRELATION MAP (score color + revenue size) -----
- var cp=rows.map(function(r){ return { rate:r.rate, rev:r.rev, name:r.name.split('–')[0].trim(), full:r.name, lat:r.lat, lng:r.lng, region:r.regionName, c:bandColor(r.rate) }; });
+ var cp=rows.map(function(r){ return { rate:r.rate, rev:r.rev, name:r.name.split('–')[0].trim(), full:r.name, lat:r.lat, lng:r.lng, region:r.regionName, c:effColor(r) }; });
  // Pearson r for the caption
  var n=cp.length, sx=0,sy=0,sxy=0,sxx=0,syy=0;
  cp.forEach(function(p){ sx+=p.rate; sy+=p.rev; sxy+=p.rate*p.rev; sxx+=p.rate*p.rate; syy+=p.rev*p.rev; });
@@ -1050,9 +1130,9 @@ function renderCEO(){
  var pearson=rDen!==0?rNum/rDen:0;
  var strength = Math.abs(pearson)>=0.7?'mạnh':Math.abs(pearson)>=0.4?'vừa':'yếu';
  if(n<2){
- document.getElementById('corrInfo').innerHTML = n===1 ? ('Đang xem 1 cơ sở: '+cp[0].name+' · '+cp[0].rate+'% · doanh thu '+cp[0].rev+' tr/tháng') : 'Không có cơ sở phù hợp bộ lọc';
+ document.getElementById('corrInfo').innerHTML = n===1 ? (cp[0].name+' · '+cp[0].rate+'% · '+cp[0].rev+' tr/tháng') : '';
  } else {
- document.getElementById('corrInfo').innerHTML='Tương quan điểm checklist và doanh thu: r = <b style="color:'+(pearson>0.4?'#168A4C':'#C17A0B')+'">'+pearson.toFixed(2)+'</b> ('+strength+', thuận) · cơ sở gần nhau cùng khu vực có thể so trực tiếp doanh thu';
+ document.getElementById('corrInfo').innerHTML='';
  }
  renderMap(cp);
 
@@ -1060,7 +1140,7 @@ function renderCEO(){
  var sorted=rows.slice().sort(function(a,b){return b.rate-a.rate;});
  var lbHtml='';
  sorted.forEach(function(r,i){ var rc=i===0?'top1':i===1?'top2':i===2?'top3':''; var medal=(i+1);
- lbHtml+='<div class="lb-row"><div class="lb-rank '+rc+'">'+medal+'</div><div class="lb-info"><div class="lb-name">'+r.name.split('–')[0].trim()+'</div><div class="lb-region">'+r.regionName+' · '+r.reporter+'</div></div><div class="lb-rev"><div class="lb-rev-val">'+r.rev+' tr</div><div class="lb-rev-lbl">DT/tháng</div></div><div class="lb-pct" style="color:'+bandColor(r.rate)+'">'+r.rate+'%</div></div>'; });
+ lbHtml+='<div class="lb-row"><div class="lb-rank '+rc+'">'+medal+'</div><div class="lb-info"><div class="lb-name">'+r.name.split('–')[0].trim()+(r.hardStop?' <span class="lb-flag">ĐỎ</span>':'')+'</div><div class="lb-region">'+r.regionName+' · '+r.reporter+'</div></div><div class="lb-rev"><div class="lb-rev-val">'+r.rev+' tr</div></div><div class="lb-pct" style="color:'+effColor(r)+'">'+r.rate+'%</div></div>'; });
  document.getElementById('leaderboard').innerHTML=lbHtml;
 
  // ===== Từ đây trở xuống lọc theo Ca (sectionCa); phần trên dùng tổng thể (cả hai ca) =====
@@ -1108,20 +1188,21 @@ function renderCEO(){
  var tbHtml='';
  allSorted.forEach(function(r){
  if(r.status==='missing'){
- tbHtml+='<tr class="main-row na-row"><td><span class="cell-name">'+r.name.split('–')[0].trim()+'</span><div class="cell-sub">'+r.name+'</div></td><td>'+r.regionName+'</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="tag tag-missing">Chưa nộp</span></td><td class="cell-mute">Cần nhắc nhở</td></tr>';
+ tbHtml+='<tr class="main-row na-row"><td><span class="cell-name">'+r.name.split('–')[0].trim()+'</span></td><td>'+r.regionName+'</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="tag tag-missing">Chưa nộp</span></td><td class="cell-mute">Cần nhắc nhở</td></tr>';
  return;
  }
  var bc=bandColor(r.rate);
+ var ebc=effColor(r);
  var statusTag=r.status==='done'?'<span class="tag tag-done">Đúng hạn</span>':'<span class="tag tag-late">Nộp muộn</span>';
  tbHtml+='<tr class="main-row" onclick="toggleDetail(this,\''+r.id+'\')">';
- tbHtml+='<td><span class="expand-arrow">›</span><span class="cell-name">'+r.name.split('–')[0].trim()+'</span><div class="cell-sub">'+r.name+'</div></td>';
+ tbHtml+='<td><span class="expand-arrow">›</span><span class="cell-name">'+r.name.split('–')[0].trim()+(r.hardStop?' <span class="lb-flag">ĐỎ</span>':'')+'</span></td>';
  tbHtml+='<td>'+r.regionName+'</td><td>'+r.reporter+'</td><td>'+r.time+'</td>';
  tbHtml+='<td class="num-pass">'+r.pass.toLocaleString('vi-VN')+'</td>';
  tbHtml+='<td class="num-fail">'+r.fail.toLocaleString('vi-VN')+'</td>';
  tbHtml+='<td><span class="mini-bar"><i style="width:'+r.rate+'%;background:'+bc+'"></i></span><span class="pct-cell" style="color:'+bc+'">'+r.rate+'%</span></td>';
- tbHtml+='<td><span class="tag" style="background:'+bc+'1f;color:'+bc+'">'+bandLabel(r.rate)+'</span></td>';
+ tbHtml+='<td><span class="tag" style="background:'+ebc+'1f;color:'+ebc+'">'+effLabel(r)+'</span></td>';
  tbHtml+='<td>'+statusTag+'</td>';
- tbHtml+='<td class="cell-hot">'+(r.rate<90?r.topHot:'Không có')+'</td></tr>';
+ tbHtml+='<td class="cell-hot">'+(r.hardStop?'<b style="color:var(--fail-red)">Vi phạm nghiêm trọng</b>':(r.rate<90?r.topHot:'Không có'))+'</td></tr>';
  // group sub-rows (hidden) — same column structure, cụm I->VI đúng sheet
  CG.forEach(function(g,gi){
  var rate=r.groupRates[gi];
@@ -1163,7 +1244,7 @@ function renderStore(){
  var avg=s.base===0?0:Math.round(gr.reduce(function(a,b){return a+b;},0)/gr.length);
 
  // rank among all
- var allRates=STORES.filter(function(x){return x.base>0;}).map(function(x){ var g=storeGroupRates(x); return {id:x.id,r:Math.round(g.reduce(function(a,b){return a+b;},0)/g.length)}; }).sort(function(a,b){return b.r-a.r;});
+ var allRates=STORES.map(function(x){ if(x.base===0) return {id:x.id,r:0}; var g=storeGroupRates(x); return {id:x.id,r:Math.round(g.reduce(function(a,b){return a+b;},0)/g.length)}; }).sort(function(a,b){return b.r-a.r;});
  var rank=allRates.findIndex(function(x){return x.id===storeId;})+1;
  var totalRanked=allRates.length;
 
@@ -1285,7 +1366,7 @@ function renderStore(){
  options:{indexAxis:'y',maintainAspectRatio:false,
  onClick:function(e,items){ if(items&&items.length){ filterStoreHotGroup(window._sGroupOrder[items[0].index]); } },
  onHover:function(e,items){ e.native.target.style.cursor = items.length?'pointer':'default'; },
- plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.x+'% đạt · bấm để xem điểm nóng';}}}},scales:{x:{min:0,max:100,ticks:{callback:function(v){return v+'%';},font:{size:10}},grid:{color:'#F0F2F6'}},y:{ticks:{font:{size:10.5},crossAlign:'far'},grid:{display:false}}}}
+ plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.x+'%';}}}},scales:{x:{min:0,max:100,ticks:{callback:function(v){return v+'%';},font:{size:10}},grid:{color:'#F0F2F6'}},y:{ticks:{font:{size:10.5},crossAlign:'far'},grid:{display:false}}}}
  });
  }
 
@@ -1352,7 +1433,7 @@ function renderStoreHotspots(){
     if(failDays>0) recur.push({txt:txt,cat:g,n:failDays});
   }); });
   recur.sort(function(a,b){return b.n-a.n;});
-  if(sub) sub.textContent = (gsel!=null) ? ('Nhóm: '+GG[gsel]+' · bấm lại để bỏ lọc') : ((caItem==='ket'?'Kết ca':'Đầu ca')+' · lỗi lặp nhiều ngày tại cơ sở');
+  if(sub) sub.textContent = (gsel!=null) ? ('Nhóm: '+GG[gsel]+' · bấm lại để bỏ lọc') : 'Lỗi lặp nhiều ngày';
   if(recur.length===0){ el.innerHTML='<div class="empty-good"><p>Không có lỗi nào lặp lại đáng kể.<br>Cơ sở duy trì ổn định!</p></div>'; return; }
   var html='';
   recur.slice(0,12).forEach(function(r){
@@ -1398,7 +1479,8 @@ function renderStoreFix(){
       +'<div class="fix-sec-head"><span class="fix-sec-rome">'+roman[sec.gi]+'</span><b>'+sec.name+'</b><span class="fix-sec-count">'+sec.items.length+' mục chưa đạt</span></div>'
       +'<div class="fix-sec-guide">'+(FIX_GUIDE[sec.name]||'Phân công khắc phục và xác nhận trước ca sau.')+'</div>';
     sec.items.forEach(function(it){
-      html+='<div class="fix-item-line"><span class="fix-stt">'+it.stt+'</span><span class="fix-item-txt">'+it.txt+'</span></div>';
+      var cls=classifyItem(sec.name, it.txt); var sm=SEV_META[cls.sev];
+      html+='<div class="fix-item-line"><span class="fix-stt">'+it.stt+'</span><span class="fix-item-txt">'+it.txt+'<span class="sev-badge" style="color:'+sm.c+';background:'+sm.bg+'">'+sm.t+'</span></span></div>';
     });
     html+='</div>';
   });
