@@ -86,6 +86,14 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 .crit-alert.open .crit-detail { display: block; }
 .na-reasons { font-size: 12px; color: var(--ink-soft); background: var(--brand-bg); padding: 8px 11px; border-radius: 8px; margin-bottom: 10px; line-height: 1.5; }
 .lb-flag { font-size: 9.5px; font-weight: 800; color: #fff; background: var(--fail-red); padding: 1px 5px; border-radius: 4px; vertical-align: middle; }
+.mgr-row { cursor: pointer; transition: background 0.12s; }
+.mgr-row:hover { background: var(--brand-bg); }
+.mgr-row.active { background: var(--brand-warm); box-shadow: inset 3px 0 0 var(--brand-orange); }
+.rg-row { cursor: pointer; }
+.rg-stores { display: flex; flex-direction: column; gap: 6px; padding: 4px 0 4px 18px; }
+.rg-store { display: flex; align-items: center; gap: 10px; font-size: 12.5px; }
+.rg-store .rg-st-name { flex: 1; color: var(--ink); }
+.rg-store .rg-st-rate { font-weight: 700; min-width: 42px; }
 .sev-badge { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 4px; margin-left: 6px; white-space: nowrap; }
 .fix-section { margin-bottom: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 .fix-section .fix-sec-head { display: flex; align-items: center; gap: 9px; background: var(--brand-warm); padding: 8px 12px; font-size: 13px; color: var(--ink); }
@@ -101,7 +109,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 .filter-bar .export-btn:hover { border-color: var(--brand-dark); background: var(--brand-bg); }
 
 /* KPI */
-.kpi-strip { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.kpi-strip { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
 .kpi-card { background: var(--brand-panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px; position: relative; overflow: hidden; }
 .kpi-card .k-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .kpi-card .k-label { font-size: 11px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
@@ -394,6 +402,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
  </div>
  <div class="kpi-card blue-accent"><div class="k-top"><div class="k-label">Tổng hạng mục</div></div><div class="k-val" id="kpiTotal">—</div><div class="k-sub" id="kpiTotalSub"></div></div>
  <div class="kpi-card orange-accent"><div class="k-top"><div class="k-label">Khiếu nại KH</div></div><div class="k-val orange" id="kpiComplaint">—</div><div class="k-sub" id="kpiComplaintSub"></div></div>
+ <div class="kpi-card blue-accent"><div class="k-top"><div class="k-label">Tỷ lệ đúng hạn</div></div><div class="k-val" id="kpiOnTime">—</div><div class="k-sub" id="kpiOnTimeSub"></div></div>
  <div class="kpi-card green-accent"><div class="k-top"><div class="k-label">Tốt nhất</div></div><div class="k-val k-name green" id="kpiBest">—</div><div class="k-sub" id="kpiBestSub"></div></div>
  <div class="kpi-card red-accent"><div class="k-top"><div class="k-label">Kém nhất</div></div><div class="k-val k-name red" id="kpiWorst">—</div><div class="k-sub" id="kpiWorstSub"></div></div>
  </div>
@@ -427,6 +436,27 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
  <div class="panel">
  <div class="panel-head"><div class="panel-title">Xếp hạng cơ sở</div><div class="panel-sub">Theo tỉ lệ hoàn thành kỳ này</div></div>
  <div id="leaderboard" style="max-height:520px;overflow-y:auto;"></div>
+ </div>
+ </div>
+
+ <div class="grid-wide" style="grid-template-columns:1fr 1fr">
+ <div class="panel">
+ <div class="panel-head"><div class="panel-title">Hiệu suất theo Quản lý vùng (gắn KPI)</div><div class="panel-sub">KPI mục tiêu 90% · bấm một quản lý để lọc khu vực</div></div>
+ <div class="tbl-wrap" style="max-height:300px;overflow:auto;">
+ <table class="data-table">
+ <thead><tr><th>Quản lý vùng</th><th>Cơ sở</th><th>KPI tuân thủ</th><th>Đạt KPI</th><th>VP NT</th></tr></thead>
+ <tbody id="managerBody"></tbody>
+ </table>
+ </div>
+ </div>
+ <div class="panel">
+ <div class="panel-head"><div class="panel-title">Tổng hợp theo khu vực</div><div class="panel-sub" id="regionSub">Bấm một khu vực để xem cơ sở bên trong</div></div>
+ <div class="tbl-wrap" style="max-height:300px;overflow:auto;">
+ <table class="data-table">
+ <thead><tr><th>Khu vực</th><th>Cơ sở</th><th>Tỉ lệ TB</th><th>Đúng hạn</th><th>VP NT</th></tr></thead>
+ <tbody id="regionBody"></tbody>
+ </table>
+ </div>
  </div>
  </div>
 
@@ -631,6 +661,7 @@ body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--b
 </div>
 </div>
 
+
 <script>
 // ============================================================
 // DATA MODEL
@@ -645,6 +676,14 @@ var FIX_GUIDE = {
  'Kiểm soát CCP & an toàn thực phẩm':'Kiểm tra lại thiết bị lạnh, ghi biểu mẫu nhiệt độ, dán tem kiểm soát; tách riêng chín/sống, lưu mẫu đúng quy định.',
  'Dụng cụ nấu & setup ca':'Bổ sung/vệ sinh dụng cụ còn thiếu, kiểm tra thiết bị (loa order, cân, khuôn) hoạt động trước ca.',
  'An toàn phòng cháy & khí gas':'Khóa van gas, kiểm tra bình chữa cháy còn hạn & đúng vị trí, báo quản lý ngay nếu phát hiện rủi ro cháy nổ.'
+};
+
+// Phân công Quản lý vùng theo khu vực (gắn KPI quản lý)
+var REGION_MGR = {
+ BADINH:'QL vùng – A. Phú', CAUGIAY:'QL vùng – A. Phú',
+ DONGDA:'QL vùng – C. Linh', HBT:'QL vùng – C. Linh',
+ HOANGMAI:'QL vùng – A. Hoàng', LONGBIEN:'QL vùng – A. Hoàng', THANHXUAN:'QL vùng – A. Hoàng',
+ OCEAN:'QL vùng – C. Trang', VINHOMES:'QL vùng – C. Trang'
 };
 
 var CRIT = {
@@ -1054,6 +1093,11 @@ function renderCEO(){
    : cmpDelta<0 ? ('<span style="color:var(--pass-green);font-weight:700">'+cmpDelta+'</span> so với kỳ trước')
    : 'không đổi so với kỳ trước';
  document.getElementById('kpiComplaintSub').innerHTML=cmpStr;
+ // Tỷ lệ nộp đúng hạn = số cơ sở nộp đúng hạn / tổng cơ sở
+ var doneCount=d.rows.filter(function(r){return r.status==='done';}).length;
+ var onTime=d.rows.length>0?Math.round(doneCount/d.rows.length*100):0;
+ document.getElementById('kpiOnTime').textContent=onTime+'%';
+ document.getElementById('kpiOnTimeSub').innerHTML='<span style="color:var(--pass-green);font-weight:700">'+doneCount+' đúng hạn</span> · '+lateCount+' muộn · '+missCount+' chưa nộp';
  // best / worst cơ sở (chỉ tính cơ sở đã báo cáo)
  var ranked=rows.slice().sort(function(a,b){return b.rate-a.rate;});
  if(ranked.length){
@@ -1142,6 +1186,11 @@ function renderCEO(){
  sorted.forEach(function(r,i){ var rc=i===0?'top1':i===1?'top2':i===2?'top3':''; var medal=(i+1);
  lbHtml+='<div class="lb-row"><div class="lb-rank '+rc+'">'+medal+'</div><div class="lb-info"><div class="lb-name">'+r.name.split('–')[0].trim()+(r.hardStop?' <span class="lb-flag">ĐỎ</span>':'')+'</div><div class="lb-region">'+r.regionName+' · '+r.reporter+'</div></div><div class="lb-rev"><div class="lb-rev-val">'+r.rev+' tr</div></div><div class="lb-pct" style="color:'+effColor(r)+'">'+r.rate+'%</div></div>'; });
  document.getElementById('leaderboard').innerHTML=lbHtml;
+
+ // Hiệu suất theo Quản lý vùng (gắn KPI) — toàn hệ thống theo kỳ
+ window._ceoDays=d.days;
+ renderManagerKPI(d.days);
+ renderRegionRollup(d.days);
 
  // ===== Từ đây trở xuống lọc theo Ca (sectionCa); phần trên dùng tổng thể (cả hai ca) =====
  var caD=getData(window._sectionCa||'all');
@@ -1504,6 +1553,81 @@ function showDayFix(off, dateLabel){
 // ============================================================
 // NAV
 // ============================================================
+// Tổng hợp theo khu vực (rollup) — bảng cho trang Tổng quan
+function renderRegionRollup(days){
+ var rows=STORES.map(function(s){return computeStore(s,days,'all');});
+ var regMap={};
+ rows.forEach(function(r){ if(!regMap[r.region])regMap[r.region]={name:r.regionName,rows:[]}; regMap[r.region].rows.push(r); });
+ var regAgg=Object.keys(regMap).map(function(code){
+ var rs=regMap[code].rows, rep=rs.filter(function(x){return x.status!=='missing';});
+ var avg=rep.length?Math.round(rep.reduce(function(a,x){return a+x.rate;},0)/rep.length):0;
+ var done=rs.filter(function(x){return x.status==='done';}).length;
+ var onTime=rs.length?Math.round(done/rs.length*100):0;
+ return {code:code, name:regMap[code].name, n:rs.length, avg:avg, onTime:onTime, crit:rs.reduce(function(a,x){return a+x.critFails;},0), hard:rs.filter(function(x){return x.hardStop;}).length, stores:rs};
+ }).sort(function(a,b){return b.avg-a.avg;});
+ var filt=window._mgrFilter||null;
+ var shown=regAgg.filter(function(x){return !filt || REGION_MGR[x.code]===filt;});
+ document.getElementById('regionSub').innerHTML = filt
+ ? ('Đang lọc theo <b>'+filt+'</b> · <a href="javascript:void(0)" onclick="filterMgrRegion(\''+filt+'\')" style="color:var(--blue)">bỏ lọc</a>')
+ : 'Bấm một khu vực để xem cơ sở bên trong';
+ var html='';
+ shown.forEach(function(x){
+ var statTag=function(s){ return s.status==='missing'?'<span class="tag tag-missing">Chưa nộp</span>':s.status==='late'?'<span class="tag tag-late">Muộn</span>':'<span class="tag tag-done">Đúng hạn</span>'; };
+ html+='<tr class="main-row rg-row" onclick="toggleRegion(\''+x.code+'\')"><td><span class="expand-arrow">›</span><span style="font-weight:600">'+x.name+'</span></td><td>'+x.n+'</td><td><span class="mini-bar"><i style="width:'+x.avg+'%;background:'+bandColor(x.avg)+'"></i></span><span class="pct-cell" style="color:'+bandColor(x.avg)+'">'+x.avg+'%</span></td><td><span style="font-weight:700;color:'+(x.onTime>=90?'var(--pass-green)':x.onTime>=70?'var(--warn-orange)':'var(--fail-red)')+'">'+x.onTime+'%</span></td><td'+(x.crit>0?' style="color:var(--fail-red);font-weight:700"':'')+'>'+x.crit+'</td></tr>';
+ // dropdown từng cơ sở — dữ liệu theo đúng cột bảng tổng
+ x.stores.slice().sort(function(a,b){return b.rate-a.rate;}).forEach(function(s){
+ html+='<tr class="rg-sub rg-sub-'+x.code+'" style="display:none">'
+ +'<td class="rg-sub-name">'+s.name.split('–')[0].trim()+(s.hardStop?' <span class="lb-flag">ĐỎ</span>':'')+'</td>'
+ +'<td style="color:var(--ink-soft);font-size:12px">'+s.regionName+'</td>'
+ +'<td><span class="pct-cell" style="color:'+effColor(s)+'">'+(s.status==='missing'?'—':s.rate+'%')+'</span></td>'
+ +'<td>'+statTag(s)+'</td>'
+ +'<td'+(s.critFails>0?' style="color:var(--fail-red);font-weight:700"':'')+'>'+s.critFails+'</td>'
+ +'</tr>';
+ });
+ });
+ document.getElementById('regionBody').innerHTML=html || '<tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:16px">Không có khu vực phù hợp.</td></tr>';
+}
+
+function toggleRegion(code){
+ var subs=document.querySelectorAll('.rg-sub-'+code);
+ var open=subs.length && subs[0].style.display==='table-row';
+ subs.forEach(function(tr){ tr.style.display = open?'none':'table-row'; });
+ // xoay mũi tên ở dòng khu vực được bấm
+ document.querySelectorAll('#regionBody .rg-row').forEach(function(r){
+ if(r.getAttribute('onclick')&&r.getAttribute('onclick').indexOf("'"+code+"'")>=0){ r.classList.toggle('open', !open); }
+ });
+}
+
+function toggleRowDetail(row){
+ var d=row.nextElementSibling;
+ if(d && d.classList.contains('row-detail')){ d.style.display = (d.style.display==='table-row')?'none':'table-row'; row.classList.toggle('open'); }
+}
+function filterMgrRegion(m){
+ window._mgrFilter = (window._mgrFilter===m)?null:m;
+ renderManagerKPI(window._ceoDays||7);
+ renderRegionRollup(window._ceoDays||7);
+}
+
+// Hiệu suất theo Quản lý vùng (gắn KPI) — bảng cho trang Tổng quan
+function renderManagerKPI(days){
+ var rows=STORES.map(function(s){return computeStore(s,days,'all');});
+ var mgrMap={};
+ rows.forEach(function(r){ var m=REGION_MGR[r.region]||'Khác'; if(!mgrMap[m])mgrMap[m]={rows:[],regions:{}}; mgrMap[m].rows.push(r); mgrMap[m].regions[r.regionName]=1; });
+ var KPI_TARGET=90;
+ var mgrAgg=Object.keys(mgrMap).map(function(m){
+ var rs=mgrMap[m].rows, rep=rs.filter(function(x){return x.status!=='missing';});
+ var avg=rep.length?Math.round(rep.reduce(function(a,x){return a+x.rate;},0)/rep.length):0;
+ var crit=rs.reduce(function(a,x){return a+x.critFails;},0);
+ return {mgr:m, regions:Object.keys(mgrMap[m].regions).join(', '), n:rs.length, avg:avg, crit:crit};
+ }).sort(function(a,b){return b.avg-a.avg;});
+ document.getElementById('managerBody').innerHTML=mgrAgg.map(function(x){
+ var pass=x.avg>=KPI_TARGET && x.crit===0;
+ var badge=pass?'<span class="tag tag-done">Đạt</span>':'<span class="tag tag-late">Chưa đạt</span>';
+ var active=(window._mgrFilter===x.mgr);
+ return '<tr class="mgr-row'+(active?' active':'')+'" onclick="filterMgrRegion(\''+x.mgr+'\')" title="'+x.regions+'"><td style="font-weight:600">'+x.mgr+'</td><td>'+x.n+'</td><td><span class="mini-bar"><i style="width:'+x.avg+'%;background:'+bandColor(x.avg)+'"></i></span><span class="pct-cell" style="color:'+bandColor(x.avg)+'">'+x.avg+'%</span></td><td>'+badge+'</td><td'+(x.crit>0?' style="color:var(--fail-red);font-weight:700"':'')+'>'+x.crit+'</td></tr>';
+ }).join('');
+}
+
 function showTab(name){
  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
