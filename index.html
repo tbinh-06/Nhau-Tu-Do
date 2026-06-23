@@ -607,7 +607,7 @@ section{margin-bottom:26px;scroll-margin-top:12px;}
 /* ===== APP SHELL: ĐIỀU HƯỚNG TRÁI DẠNG THƯ MỤC ===== */
 html,body{ height:100%; }
 .appshell{ display:flex; height:100vh; overflow:hidden; }
-.appnav{ width:216px; flex-shrink:0; background:linear-gradient(180deg, var(--brand-dark), #21402E); color:#dfeae2; overflow-y:auto; padding:0 0 18px; }
+.appnav{ width:184px; flex-shrink:0; background:linear-gradient(180deg, var(--brand-dark), #21402E); color:#dfeae2; overflow-y:auto; padding:0 0 18px; }
 .appnav-brand{ padding:18px 18px 10px; font-size:11px; font-weight:800; letter-spacing:0.7px; text-transform:uppercase; color:rgba(255,255,255,0.5); }
 .folder{ display:flex; flex-direction:column; gap:2px; padding:0 10px; }
 .fgroup-head{ display:flex; align-items:center; gap:9px; padding:9px 12px; border-radius:8px; cursor:pointer; font-size:13.5px; font-weight:700; color:#eaf2ec; user-select:none; }
@@ -627,9 +627,9 @@ html,body{ height:100%; }
 .navfilter .nf-g label{ color:rgba(255,255,255,0.72); font-size:11px; font-weight:600; }
 .navfilter input[type=date], .navfilter select{ width:100%; min-width:0; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:7px; padding:6px 7px; font-size:11.5px; }
 .navfilter select option, .navfilter select optgroup{ color:#1C2B23; }
-.navfilter .nf-daterow{ display:flex; align-items:center; gap:5px; }
+.navfilter .nf-daterow{ display:flex; flex-direction:column; align-items:stretch; gap:4px; }
 .navfilter .nf-daterow input{ flex:1; min-width:0; }
-.navfilter .nf-arrow{ color:rgba(255,255,255,0.6); font-size:10.5px; flex-shrink:0; }
+.navfilter .nf-arrow{ color:rgba(255,255,255,0.5); font-size:10px; text-align:center; }
 .navfilter .seg, .navfilter .uf-seg{ display:flex; gap:4px; background:rgba(255,255,255,0.08); padding:3px; border-radius:8px; }
 .navfilter .seg button, .navfilter .uf-seg button{ flex:1; background:transparent; border:none; color:rgba(255,255,255,0.72); padding:5px 3px; border-radius:6px; font-size:11px; cursor:pointer; }
 .navfilter .seg button.active, .navfilter .uf-seg button.active{ background:rgba(255,255,255,0.2); color:#fff; font-weight:700; }
@@ -811,7 +811,7 @@ html,body{ height:100%; }
  <div class="sec-bar" id="st-sec-2"><span class="sb-num">2</span><h2>Phân tích chi tiết theo ca</h2></div>
 
  <!-- 3 biểu đồ cùng dòng -->
- <div class="p3-grid">
+ <div class="p2-grid">
  <div class="panel">
  <div class="panel-head"><div class="panel-title">Tỉ lệ đạt theo ngày</div><div class="panel-sub">So với mục tiêu 90%</div></div>
  <div class="chart-box" style="height:250px;"><canvas id="sTrendChart"></canvas></div>
@@ -820,10 +820,11 @@ html,body{ height:100%; }
  <div class="panel-head"><div class="panel-title">Điểm mạnh / yếu theo nhóm</div><div class="panel-sub" id="sGroupCaLabel">Phiếu đầu ca</div></div>
  <div class="chart-box" style="height:250px;"><canvas id="sGroupChart"></canvas></div>
  </div>
- <div class="panel">
- <div class="panel-head"><div class="panel-title">Cảnh báo – Các mục không đạt</div><div class="panel-sub">Nhóm hạng mục có nhiều mục không đạt</div></div>
- <div class="chart-box" style="height:250px;"><canvas id="sGroupBar"></canvas></div>
  </div>
+
+ <div class="panel mb">
+ <div class="panel-head"><div class="panel-title">Cảnh báo – Các mục không đạt</div><div class="panel-sub">Nhóm hạng mục có nhiều mục không đạt</div></div>
+ <div class="chart-box" style="height:300px;"><canvas id="sGroupBar"></canvas></div>
  </div>
 
  <div class="sec-bar" id="st-sec-3"><span class="sb-num">3</span><h2>Chi tiết không đạt</h2></div>
