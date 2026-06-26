@@ -647,6 +647,16 @@ html,body{ height:100%; }
 .p3-grid > .panel{ min-width:0; }
 .p3-grid .chart-box, .p3-grid canvas{ max-width:100%; min-width:0; }
 .kpi-strip > .kpi-card{ min-width:0; }
+/* Phân tích lỗi: top lỗi click lọc + danh sách vi phạm dẫn phiếu */
+.ov .err-row.clk{ cursor:pointer; border-radius:6px; transition:background .15s; }
+.ov .err-row.clk:hover{ background:var(--brand-bg); }
+.ov .err-row.err-active{ background:#FBEAEA; box-shadow:inset 3px 0 0 var(--fail-red); }
+.ov .vpcase{ display:flex; align-items:center; gap:9px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; text-decoration:none; color:var(--ink); background:#fff; transition:background .15s,border-color .15s; }
+.ov .vpcase:hover{ background:var(--brand-bg); border-color:var(--fail-red); }
+.ov .vpcase .vpcase-txt{ flex:1; font-size:12px; line-height:1.35; }
+.ov .vpcase .vpcase-store{ font-size:11px; color:var(--ink-soft); white-space:nowrap; }
+.ov .vpcase .vpcase-freq{ font-size:11px; font-weight:800; color:var(--fail-red); background:#FBEAEA; border-radius:10px; padding:1px 8px; white-space:nowrap; }
+.ov .vpcase .vpcase-link{ font-size:11px; color:var(--fail-red); font-weight:700; white-space:nowrap; }
 /* ===== THANH LỌC THỐNG NHẤT (chi tiết cơ sở / sự cố) ===== */
 .uf-bar{ display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; background:var(--brand-panel); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin-bottom:18px; }
 .uf-bar .uf-g{ display:flex; flex-direction:column; gap:5px; }
@@ -1877,6 +1887,7 @@ function renderManagerKPI(days){
  }).join('');
 }
 
+function setErrCat(name){ window._ovErrCat = (window._ovErrCat===name)? null : name; renderOverview(); }
 function navGo(page, sec){
  showTab(page);
  document.querySelectorAll('.fgroup-subs a').forEach(function(a){a.classList.remove('active');});
@@ -2018,17 +2029,21 @@ function renderOverview(){
  var gstats=groupFailStats(stz,F.ca).slice().sort(function(a,b){return b.fails-a.fails;});
  var totF=gstats.reduce(function(a,x){return a+x.fails;},0)||1, maxF=Math.max.apply(null,gstats.map(function(x){return x.fails;}))||1;
  var palette=['#CB3B3B','#C17A0B','#C8862B','#168A4C','#2563A8','#3A6450'];
+ var ecat=window._ovErrCat||null;
  var te='<div class="err-row head"><span>Hạng mục lỗi</span><span></span><span>Số lần lỗi</span><span>% trên tổng</span></div>';
- gstats.forEach(function(x,i){ te+='<div class="err-row"><span class="err-name">'+x.name+'</span><span class="err-bar"><i style="width:'+Math.round(x.fails/maxF*100)+'%;background:'+palette[i%palette.length]+'"></i></span><span class="err-cnt">'+x.fails+'</span><span class="err-pct">'+(Math.round(x.fails/totF*1000)/10)+'%</span></div>'; });
+ gstats.forEach(function(x,i){ var act=(ecat===x.name)?' err-active':''; var na=x.name.replace(/&/g,'&amp;'); te+='<div class="err-row clk'+act+'" onclick="setErrCat(\''+na+'\')"><span class="err-name">'+x.name+'</span><span class="err-bar"><i style="width:'+Math.round(x.fails/maxF*100)+'%;background:'+palette[i%palette.length]+'"></i></span><span class="err-cnt">'+x.fails+'</span><span class="err-pct">'+(Math.round(x.fails/totF*1000)/10)+'%</span></div>'; });
  document.getElementById('topErrors').innerHTML=te;
- document.getElementById('critSub').innerHTML='<span style="color:var(--fail-red);font-weight:700">'+totCrit+' vi phạm</span> tại '+critStores.length+' cơ sở';
+ // Gom các trường hợp vi phạm hard-stop, xếp từ nhiều đến ít
+ var cases=[];
+ critStores.forEach(function(r){ r.critItems.forEach(function(ci){ cases.push({id:r.id, store:r.name.split('–')[0].trim(), region:r.regionName, txt:ci.txt, type:ci.type, cat:ci.cat, rate:r.rate}); }); });
+ var freq={}; cases.forEach(function(c){ freq[c.txt]=(freq[c.txt]||0)+1; });
+ var shown = ecat ? cases.filter(function(c){return c.cat===ecat;}) : cases;
+ shown.sort(function(a,b){ return (freq[b.txt]-freq[a.txt]) || (a.txt<b.txt?-1:(a.txt>b.txt?1:0)) || (a.store<b.store?-1:1); });
+ document.getElementById('critSub').innerHTML='<span style="color:var(--fail-red);font-weight:700">'+shown.length+' vi phạm</span>'+(ecat?(' &middot; lọc: <b>'+ecat+'</b> <a onclick="setErrCat(null)" style="color:var(--blue);cursor:pointer;text-decoration:underline">bỏ lọc</a>'):(' tại '+critStores.length+' cơ sở'));
  var cl='';
- if(critStores.length===0){ cl='<div style="color:var(--ink-mute);padding:14px 0">Không có lỗi nghiêm trọng trong kỳ.</div>'; }
- else critStores.forEach(function(r){
- var items=r.critItems.map(function(ci){ var tcls=ci.type==='gas'?'gas':'attp', tlabel=ci.type==='gas'?'PCCC/khí gas':'CCP/ATTP';
- return '<div class="crit-item"><span class="vp-tag '+tcls+'">'+tlabel+'</span><span>'+ci.txt+'</span></div>'; }).join('');
- cl+='<div class="critrow"><div class="critrow-h"><span class="flag">ĐỎ</span><b>'+r.name.split('–')[0].trim()+'</b><span style="color:var(--ink-soft);font-size:12px">'+r.regionName+' · '+r.rate+'%</span></div><div class="crit-detail-open">'+items+'</div></div>';
- });
+ if(shown.length===0){ cl='<div style="color:var(--ink-mute);padding:14px 0">Không có lỗi nghiêm trọng'+(ecat?' thuộc nhóm này':'')+' trong kỳ.</div>'; }
+ else shown.forEach(function(c){ var tcls=c.type==='gas'?'gas':'attp', tlabel=c.type==='gas'?'PCCC/khí gas':'CCP/ATTP';
+ cl+='<a class="vpcase" href="'+serviceUrl(c.id,0,'dau')+'" target="_blank"><span class="vp-tag '+tcls+'">'+tlabel+'</span><span class="vpcase-txt">'+c.txt+'</span><span class="vpcase-store">'+c.store+' &middot; '+c.region+'</span><span class="vpcase-freq">'+freq[c.txt]+' lần</span><span class="vpcase-link">Xem phiếu &rsaquo;</span></a>'; });
  document.getElementById('critList').innerHTML=cl;
 
  // ===== SECTION 4: XẾP HẠNG =====
